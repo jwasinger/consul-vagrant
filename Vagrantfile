@@ -7,22 +7,9 @@ echo "Installing dependencies ..."
 sudo apt-get update
 sudo apt-get install -y unzip curl jq
 
-echo "Determining Consul version to install ..."
-CHECKPOINT_URL="https://checkpoint-api.hashicorp.com/v1/check"
-if [ -z "$CONSUL_DEMO_VERSION" ]; then
-    CONSUL_DEMO_VERSION=$(curl -s "${CHECKPOINT_URL}"/consul | jq .current_version | tr -d '"')
-fi
+cp /tmp/consul /usr/bin/
 
-echo "Fetching Consul version ${CONSUL_DEMO_VERSION} ..."
-cd /tmp/
-curl -s https://releases.hashicorp.com/consul/${CONSUL_DEMO_VERSION}/consul_${CONSUL_DEMO_VERSION}_linux_amd64.zip -o consul.zip
-
-echo "Installing Consul version ${CONSUL_DEMO_VERSION} ..."
-unzip consul.zip
-sudo chmod +x consul
-sudo mv consul /usr/bin/consul
-
-sudo mkdir /etc/consul.d
+sudo mkdir -p /etc/consul.d
 sudo chmod a+w /etc/consul.d
 
 SCRIPT
@@ -40,11 +27,10 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = DEMO_BOX_NAME
 
-  config.vm.provision "file", source: "../../bin/consul", destination: "/usr/local/bin/consul"
+  config.vm.provision "file", source: "../../bin/consul", destination: "/tmp/consul"
 
-  config.vm.provision "shell",
-                          inline: $script,
-                          env: {'CONSUL_DEMO_VERSION' => CONSUL_DEMO_VERSION}
+  config.vm.provision "shell", inline: $script
+                          
 
   config.vm.define "n1" do |n1|
       n1.vm.hostname = "n1"
