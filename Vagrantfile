@@ -7,15 +7,19 @@ echo "Installing dependencies ..."
 sudo apt-get update
 sudo apt-get install -y unzip curl jq
 
-cp /tmp/consul /usr/bin/
+cp /vagrant/consul /usr/bin/
 
 sudo mkdir -p /etc/consul.d
 sudo chmod a+w /etc/consul.d
 
 SCRIPT
 
-# Specify a Consul version
-CONSUL_DEMO_VERSION = ENV['CONSUL_DEMO_VERSION']
+# copy the consul binary to this directory so that it will be mounted on the VM
+system("
+    if [ #{ARGV[0]} = 'up' ] || [ #{ARGV[0]} = 'provision' ]; then
+	cp ../../bin/consul .
+    fi
+")
 
 # Specify a custom Vagrant box for the demo
 DEMO_BOX_NAME = ENV['DEMO_BOX_NAME'] || "debian/jessie64"
@@ -26,8 +30,6 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = DEMO_BOX_NAME
-
-  config.vm.provision "file", source: "../../bin/consul", destination: "/tmp/consul"
 
   config.vm.provision "shell", inline: $script
                           
