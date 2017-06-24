@@ -1,0 +1,1 @@
+{ports:{http:8800,dns:8801,serf_lan:8803,serf_wan:8804,server:8805}}
