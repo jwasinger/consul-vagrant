@@ -9,6 +9,11 @@ sudo apt-get install -y unzip curl jq screen
 sudo cp -R /vagrant/consul.d /etc/
 sudo chmod a+w /etc/consul.d
 sudo cp /vagrant/consul /usr/bin
+
+export PATH=$PATH:/usr/local/bin
+sudo apt-get install -y nodejs npm && npm install -g http-server
+sudo ln -s /usr/bin/nodejs /bin/nodejs
+sudo ln -s /usr/bin/npm /bin/npm
 SCRIPT
 
 
@@ -43,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "n1" do |n1|
       n1.vm.hostname = "n1"
-	  n1.vm.synced_folder 'server', '/vagrant'
+	  n1.vm.synced_folder 'build/server', '/vagrant'
       n1.vm.network "private_network", ip: "172.20.20.10"
       n1.vm.provision "shell", "inline": $installScript
       n1.vm.provision "shell", "inline": $server
@@ -51,7 +56,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "n2" do |n2|
       n2.vm.hostname = "n2"
-	  n2.vm.synced_folder 'client', '/vagrant'
+	  n2.vm.synced_folder 'build/client', '/vagrant'
       n2.vm.network "private_network", ip: "172.20.20.11"
       n2.vm.provision "shell", "inline": $installScript
       n2.vm.provision "shell", "inline": $client

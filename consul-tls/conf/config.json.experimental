@@ -1,0 +1,14 @@
+{
+    "server": true,
+    "data_dir": "/var/consul",
+    "encrypt": "pmsKacTdVOb4x8/Vtr9PWw==",
+    "log_level": "INFO",
+    "enable_syslog": true,
+    "watches": [
+		{
+		  "type": "service",
+		  "service": "redis",
+		  "handler": "echo \'hello world\'"
+		}
+    ]
+}

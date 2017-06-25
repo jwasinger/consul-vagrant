@@ -1,0 +1,12 @@
+{
+    "server": true,
+    "data_dir": "/var/consul",
+    "encrypt": "pmsKacTdVOb4x8/Vtr9PWw==",
+    "ca_file": "/etc/consul.d/ssl/ca.cert",
+    "cert_file": "/etc/consul.d/ssl/consul.cert",
+    "key_file": "/etc/consul.d/ssl/consul.key",
+    "verify_incoming": true,
+    "verify_outgoing": true,
+    "log_level": "INFO",
+    "enable_syslog": true
+}
